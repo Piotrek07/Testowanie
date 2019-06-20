@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -177,6 +178,36 @@ public class CalculatorTest {
         double expectet = 8;
         double actual = Calculator.pow(2, 3);
         assertThat(expectet).isEqualTo(actual, Offset.strictOffset(0.01));
+    }
+    // Testowanie pow parametrycznie
+    @Test
+    @Parameters({"2, 2, 4", "3, 3, 27", "4, 2, 16"})
+    public void pow_parametrized(double a, double b, double expected){
+        double actual = Calculator.pow(a, b);
+    }
+
+
+    // testowanie za pomoca metody
+    @Test
+    @Parameters(method = "getPowData")
+    public void powParametrizedMethod(double a, double b, double expected){
+        double actual = Calculator.pow(a, b);
+        assertThat(expected).isEqualTo(actual);
+    }
+
+    private Object[] getPowData(){
+        return new Object[]{
+                new Object[]{2, 2, 4},
+                new Object[]{3, 3, 27},
+                new Object[]{4, 4, 256}
+        };
+    }
+
+    @Test
+    @Parameters(source = PowDataProwider.class)
+    public void powParametrizedByClass(double a, double b, double expected){
+        double actual = Calculator.pow(a, b);
+        assertThat(expected).isEqualTo(actual, Offset.strictOffset(0.01));
     }
 
 
